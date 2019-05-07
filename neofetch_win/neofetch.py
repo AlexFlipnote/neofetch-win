@@ -78,8 +78,7 @@ class Neofetch:
         """ Get a .txt art file """
         if self.art:
             try:
-                getart = self.art.replace('\\', '/')
-                lines = open(f"{os.getcwd()}/{self.art}", "r").read().splitlines()
+                lines = open(self.art, "r").read().splitlines()
             except FileNotFoundError:
                 lines = art.default_art
         else:

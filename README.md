@@ -18,6 +18,7 @@ Black, red, green, yellow, blue, magenta, cyan, white
 ### Using ASCII art
 1. File has to be readable
 2. When targeting file from different path, replace `\` with `\\` in order for Windows to understand it
+<br>**NOTE:** Remember to use entire path, example: `neofetch --art C:\\Users\\AlexFlipnote\\art.txt`
 3. Magic happens, yey
 
 # Usage
