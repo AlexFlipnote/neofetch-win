@@ -4,12 +4,20 @@ neofetch, but for Windows
 This was made to have the command [neofetch](https://github.com/dylanaraps/neofetch) available on the Windows CMD.
 If you wish to contribute, feel free to do so.
 
+## Requirement
+- Python 3.6 or up
+
+## Install
+- Open CMD as admin
+- Type the following command: `pip install neofetch-win`
+- Now you can type `neofetch` in CMD to see results
+
 ### Available colours
 Black, red, green, yellow, blue, magenta, cyan, white
 
 ### Using ASCII art
 1. File has to be readable
-2. When targeting file from different path, replace `\` with `\\` in order for Windows to undersrand it
+2. When targeting file from different path, replace `\` with `\\` in order for Windows to understand it
 3. Magic happens, yey
 
 # Usage
