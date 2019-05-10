@@ -1,8 +1,7 @@
 import colorama
 import getpass
-import os
-import platform
 import psutil
+import shutil
 import socket
 import sys
 import time
@@ -38,6 +37,10 @@ class Neofetch:
         """ Colourize text to a different colour """
         template = f"{self.bright}{self.colour}{text}{self.resetc}"
         return template
+
+    def disk_space(self, partition: str):
+        total, used, free = shutil.disk_usage(partition)
+        return total, used, free
 
     def colours(self, colour: str = None):
         """ Colour validator """
@@ -115,8 +118,9 @@ class Neofetch:
     @property
     def os(self):
         """ Finds out what OS you're currently on """
-        uname = platform.uname()
-        return f"{uname.system} {uname.release}"
+        lines = self.wmic("wmic os get Caption")
+        os_fullname = lines[-1].replace("Microsoft ", "")
+        return os_fullname
 
     @property
     def uptime(self):
@@ -159,12 +163,38 @@ class Neofetch:
         return lines[-1]
 
     @property
+    def motherboard(self):
+        """ Find the current motherboard you got """
+        mboard_name = self.wmic("wmic baseboard get Manufacturer")
+        mboard_module = self.wmic("wmic baseboard get product")
+        return f"{mboard_name[-1]} ({mboard_module[-1]})"
+
+    @property
     def ram(self):
         """ Get RAM used/free/total """
         ram = psutil.virtual_memory()
         used = self.readable(ram.used)
         total = self.readable(ram.total)
-        return f"{used} / {total}"
+
+        percent_used = round(ram.used / ram.total * 100, 2)
+
+        return f"{used} / {total} ({percent_used}%)"
+
+    @property
+    def partitions(self):
+        """ Find the disk partitions on current OS """
+        parts = psutil.disk_partitions()
+        listparts = []
+
+        for g in parts:
+            try:
+                total, used, free = self.disk_space(g.device)
+                percent_used = round(used / total * 100, 2)
+                listparts.append(f"      {g.device[:2]} {self.readable(used)} / {self.readable(total)} ({percent_used}%)")
+            except PermissionError:
+                continue
+
+        return listparts
 
     def pretty_print(self):
         """ Print everything in a lovely cmd form """
@@ -179,10 +209,13 @@ class Neofetch:
             f"{self.colourize('OS')}: {self.os}",
             f"{self.colourize('Uptime')}: {self.uptime}",
             f"{self.colourize('Local IP')}: {self.local_ip}",
+            f"{self.colourize('Motherboard')}: {self.motherboard}",
             f"{self.colourize('CPU')}: {self.cpu}",
             f"{self.colourize('GPU')}: {self.gpu[0].strip()}",
             *self.gpu[1:],
-            f"{self.colourize('Memory')}: {self.ram}"
+            f"{self.colourize('Memory')}: {self.ram}",
+            f"{self.colourize('Disk')}: {self.partitions[0].strip()}",
+            *self.partitions[1:]
         ]
 
         build_print = []
