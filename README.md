@@ -1,6 +1,8 @@
 # neofetch-win
 neofetch, but for Windows
 
+![PreviewImage](https://i.alexflipnote.dev/vfgQo1y.png)
+
 This was made to have the command [neofetch](https://github.com/dylanaraps/neofetch) available on the Windows CMD.
 If you wish to contribute, feel free to do so.
 
@@ -13,7 +15,7 @@ If you wish to contribute, feel free to do so.
 - Now you can type `neofetch` in CMD to see results
 
 ### Available colours
-Black, red, green, yellow, blue, magenta, cyan, white
+black, red, green, yellow, blue, magenta, cyan, white
 
 ### Using ASCII art
 1. File has to be readable
