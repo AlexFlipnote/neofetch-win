@@ -3,6 +3,10 @@ import os
 
 from setuptools import setup
 
+requirements = []
+with open('requirements.txt') as f:
+    requirements = f.read().splitlines()
+
 
 version = ''
 with open('neofetch_win/__init__.py') as f:
@@ -25,6 +29,7 @@ setup(
     license='GNU v3',
     description='neofetch, but for Windows',
     include_package_data=True,
+    install_requires=requirements,
     entry_points={
         'console_scripts': [
             'neofetch=neofetch_win.main:main'
