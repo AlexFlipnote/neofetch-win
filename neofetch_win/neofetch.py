@@ -150,7 +150,7 @@ class Neofetch:
     def gpu(self):
         """ Get the current GPU you got """
         lines = self.wmic("wmic path win32_VideoController get name")
-        return lines[-1]
+        return [f'     {gpu.strip()}' for gpu in lines[1:]]
 
     @property
     def cpu(self):
@@ -180,7 +180,8 @@ class Neofetch:
             f"{self.colourize('Uptime')}: {self.uptime}",
             f"{self.colourize('Local IP')}: {self.local_ip}",
             f"{self.colourize('CPU')}: {self.cpu}",
-            f"{self.colourize('GPU')}: {self.gpu}",
+            f"{self.colourize('GPU')}: {self.gpu[0].strip()}",
+            *self.gpu[1:],
             f"{self.colourize('Memory')}: {self.ram}"
         ]
 
@@ -188,19 +189,25 @@ class Neofetch:
         spacing = 6 + self.spacing
 
         if self.display_art:
-            if len(art) > 8:
-                for i, g in enumerate(art):
-                    if i <= 7:
-                        build_print.append(f"{self.bright}{self.art_colour}{g:<{spacing}}{self.resetc}{components[i]}")
-                    else:
-                        build_print.append(f"{self.bright}{self.art_colour}{g}")
+            if len(art) > len(components):  # Prefer the bigger array to iterate over
+                for index, art_line in enumerate(art):
+                    line = f'{self.bright}{self.art_colour}{art_line:<{spacing}}{self.resetc}'
+
+                    if index < len(components):
+                        line += components[index]
+
+                    build_print.append(line)
             else:
-                for i, g in enumerate(components):
-                    if i < len(art):
-                        build_print.append(f"{self.bright}{self.art_colour}{art[i]:<{spacing}}{self.resetc}{g}")
+                for index, component in enumerate(components):
+                    if index < len(art):
+                        line = f'{self.bright}{self.art_colour}{art[index]:<{spacing}}{self.resetc}'
                     else:
-                        build_print.append(f"{'':<{spacing}}{g}")
+                        line = f'{"":<{spacing}}'
+
+                    line += component
+
+                    build_print.append(line)
         else:
-            build_print = [g for g in components]
+            build_print = components
 
         return "\n".join(build_print)
