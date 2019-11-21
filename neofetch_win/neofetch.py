@@ -22,7 +22,7 @@ class Neofetch:
         self.bright = colorama.Style.BRIGHT
         self.resetc = colorama.Style.RESET_ALL
 
-        self.stream = colorama.AnsiToWin32(sys.stderr).stream
+        self.stream = colorama.AnsiToWin32(sys.stdout).stream
         colorama.init(wrap=False)
 
     def readable(self, num, suffix='B'):
