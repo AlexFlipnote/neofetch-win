@@ -9,8 +9,8 @@ def shell():
     arguments = argpar.getarg()
     parser = argpar.Arguments(description="neofetch, but for Windows")
     parser.add_argument('-v', '--version', action='store_true', help='Show the version number and exit')
-    parser.add_argument('-c', '--colour', nargs='+', help='Change colour of the text', default=None)
-    parser.add_argument('-ac', '--artcolour', nargs='+', help='Change colour of the ascii', default=None)
+    parser.add_argument('-c', '--colour', '--color', nargs='+', help='Change colour of the text', default=None)
+    parser.add_argument('-ac', '--artcolour', '--artcolor', nargs='+', help='Change colour of the ascii', default=None)
     parser.add_argument('-a', '--art', nargs='+', help='Change the ascii art', default=None)
     parser.add_argument('-na', '--noart', action='store_true', help='Turn off ascii art')
 
