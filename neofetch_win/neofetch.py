@@ -72,7 +72,7 @@ class Neofetch:
         p = Popen(command.split(" "), stdout=PIPE)
         stdout, stderror = p.communicate()
 
-        output = stdout.decode('UTF-8')
+        output = stdout.decode("UTF-8", "ignore")
         lines = output.split("\r\r")
         lines = [g.replace("\n", "").replace("  ", "") for g in lines if len(g) > 2]
         return lines
