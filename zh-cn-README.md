@@ -1,10 +1,12 @@
 # neofetch-win
 这是neofetch，但是为windows而写的。
 
+#### | [ENGLISH](./README.md) | 简体中文 |
+
 ![PreviewImage](https://i.alexflipnote.dev/vfgQo1y.png)
 
 这是为了使[Neofetch](https://github.com/dylanaraps/neofetch)在Windows上的CMD上可用。如果您愿意捐款，请随时捐款。
-##### 译者提示：在Git Bash可能会出现错误，请尽量在Windows上的CMD上使用。
+##### 译者提示：在Git Bash可能会出现错误，请尽量在Windows上的CMD或Powershell上使用。
 
 ## 安装需求
 - Python 3.6或更高版本。
@@ -18,7 +20,7 @@
 黑色，红色，绿色，黄色，蓝色，洋红色，青色，白色。(black,red, green, yellow, blue, magenta, cyan, white)
 #### 译者提示：当然，您必须使用英语输入。
 
-### 使用其他ASCII艺术文件
+### 使用其他ASCII艺术
 1. 文件可读。
 2. 从不同路径使用文件时，请用\\替换`\`以使Windows理解它为`\`，而不是特殊字符
 <br>**注意:** 记住使用完全路径, 例子：`neofetch --art C:\\Users\\AlexFlipnote\\art.txt`

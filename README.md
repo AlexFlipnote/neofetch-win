@@ -1,6 +1,8 @@
 # neofetch-win
 neofetch, but for Windows
 
+#### |ENGLISH | [简体中文](./zh-cn-README.md) |
+
 ![PreviewImage](https://i.alexflipnote.dev/vfgQo1y.png)
 
 This was made to have the command [neofetch](https://github.com/dylanaraps/neofetch) available on the Windows CMD.
