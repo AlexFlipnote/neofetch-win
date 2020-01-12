@@ -1,10 +1,12 @@
 # neofetch-win
 这是neofetch，但是为windows而写的。
 
+#### | [ENGLISH](./README.md) | 简体中文 |
+
 ![PreviewImage](https://i.alexflipnote.dev/vfgQo1y.png)
 
 这是为了使[Neofetch](https://github.com/dylanaraps/neofetch)在Windows上的CMD上可用。如果您愿意捐款，请随时捐款。
-##### 译者提示：在Git Bash可能会出现错误，请尽量在Windows上的CMD上使用。
+##### 译者提示：在Git Bash可能会出现错误，请尽量在Windows上的CMD或Powershell上使用。
 
 ## 安装需求
 - Python 3.6或更高版本。
