@@ -18,7 +18,7 @@
 黑色，红色，绿色，黄色，蓝色，洋红色，青色，白色。(black,red, green, yellow, blue, magenta, cyan, white)
 #### 译者提示：当然，您必须使用英语输入。
 
-### 使用其他ASCII艺术文件
+### 使用其他ASCII艺术
 1. 文件可读。
 2. 从不同路径使用文件时，请用\\替换`\`以使Windows理解它为`\`，而不是特殊字符
 <br>**注意:** 记住使用完全路径, 例子：`neofetch --art C:\\Users\\AlexFlipnote\\art.txt`
