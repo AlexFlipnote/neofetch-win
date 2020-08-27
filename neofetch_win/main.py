@@ -18,7 +18,7 @@ def shell():
         args = parser.parse_args(shlex.split(arguments))
     except Exception as e:
         print(e)
-        sys.exit(0)
+        sys.exit(1)
 
     if args.version:
         print(neofetch_win.__version__)
