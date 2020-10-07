@@ -167,7 +167,11 @@ class Neofetch:
         """ Find the current motherboard you got """
         mboard_name = self.wmic("wmic baseboard get Manufacturer")
         mboard_module = self.wmic("wmic baseboard get product")
-        return f"{mboard_name[-1]} ({mboard_module[-1]})"
+
+        try:
+            return f"{mboard_name[-1]} ({mboard_module[-1]})"
+        except IndexError:
+            return "Unknown..."
 
     @property
     def ram(self):
