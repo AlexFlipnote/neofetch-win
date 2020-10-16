@@ -13,6 +13,7 @@ def shell():
     parser.add_argument('-ac', '--artcolour', '--artcolor', nargs='+', help='Change colour of the ascii', default=None)
     parser.add_argument('-a', '--art', nargs='+', help='Change the ascii art', default=None)
     parser.add_argument('-na', '--noart', action='store_true', help='Turn off ascii art')
+    parser.add_argument('-i', '--ignore', nargs='+', default=[], help='Ignore components (os, uptime, ip, motherboard, cpu, gpu, ram, disk)')
 
     try:
         args = parser.parse_args(shlex.split(arguments))
@@ -48,10 +49,13 @@ def shell():
         colour=colour,
         art_colour=artcolour,
         art=art,
-        display_art=display_art
+        display_art=display_art,
     )
 
-    print(nf.pretty_print(), file=nf.stream)
+    print(
+        nf.pretty_print(ignore_list=args.ignore),
+        file=nf.stream
+    )
 
 
 def main():

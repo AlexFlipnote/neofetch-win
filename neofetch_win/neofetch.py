@@ -45,24 +45,27 @@ class Neofetch:
     def colours(self, colour: str = None):
         """ Colour validator """
         clist = ["black", "red", "green", "yellow", "blue", "magenta", "cyan", "white"]
-        if colour and colour in clist:
-            if colour.lower() == "black":
+        if colour:
+            colour = colour.lower()
+            if colour == "black":
                 return colorama.Fore.BLACK
-            elif colour.lower() == "red":
+            elif colour == "red":
                 return colorama.Fore.RED
-            elif colour.lower() == "green":
+            elif colour == "green":
                 return colorama.Fore.GREEN
-            elif colour.lower() == "yellow":
+            elif colour == "yellow":
                 return colorama.Fore.YELLOW
-            elif colour.lower() == "blue":
+            elif colour == "blue":
                 return colorama.Fore.BLUE
-            elif colour.lower() == "magenta":
+            elif colour == "magenta":
                 return colorama.Fore.MAGENTA
-            elif colour.lower() == "cyan":
+            elif colour == "cyan":
                 return colorama.Fore.CYAN
-            elif colour.lower() == "white":
+            elif colour == "white":
                 return colorama.Fore.WHITE
             else:
+                possible_colours = ", ".join(clist)
+                print(f"Possible colours: {possible_colours}")
                 return colorama.Fore.RESET
         else:
             return colorama.Fore.RESET
@@ -200,7 +203,7 @@ class Neofetch:
 
         return listparts
 
-    def pretty_print(self):
+    def pretty_print(self, ignore_list: list = []):
         """ Print everything in a lovely cmd form """
         art = self.get_art()
 
@@ -208,19 +211,29 @@ class Neofetch:
         headerline_nocolour = f"{self.username}@{self.hostname}"
         underlines = "".join(["-" for g in range(0, len(headerline_nocolour))])
 
-        components = [
-            headerline, underlines,
-            f"{self.colourize('OS')}: {self.os}",
-            f"{self.colourize('Uptime')}: {self.uptime}",
-            f"{self.colourize('Local IP')}: {self.local_ip}",
-            f"{self.colourize('Motherboard')}: {self.motherboard}",
-            f"{self.colourize('CPU')}: {self.cpu}",
-            f"{self.colourize('GPU')}: {self.gpu[0].strip()}",
-            *self.gpu[1:],
-            f"{self.colourize('Memory')}: {self.ram}",
-            f"{self.colourize('Disk')}: {self.partitions[0].strip()}",
-            *self.partitions[1:]
+        components = [headerline, underlines]
+
+        more_gpu = self.gpu[1:] if self.gpu[1:] else None
+        more_disk = self.partitions[1:] if self.partitions[1:] else None
+
+        components_list = [
+            ("os", f"{self.colourize('OS')}: {self.os}"),
+            ("uptime", f"{self.colourize('Uptime')}: {self.uptime}"),
+            ("ip", f"{self.colourize('Local IP')}: {self.local_ip}"),
+            ("motherboard", f"{self.colourize('Motherboard')}: {self.motherboard}"),
+            ("cpu", f"{self.colourize('CPU')}: {self.cpu}"),
+            ("gpu", f"{self.colourize('GPU')}: {self.gpu[0].strip()}"),
+            ("ram", f"{self.colourize('Memory')}: {self.ram}"),
+            ("disk", f"{self.colourize('Disk')}: {self.partitions[0].strip()}")
         ]
+
+        for name, info in components_list:
+            if name not in ignore_list:
+                components.append(info)
+                if name == "gpu" and more_gpu:
+                    components.append(*more_gpu)
+                if name == "disk" and more_disk:
+                    components.append(*more_disk)
 
         build_print = []
         spacing = 6 + self.spacing
