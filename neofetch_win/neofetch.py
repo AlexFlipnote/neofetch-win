@@ -231,9 +231,11 @@ class Neofetch:
             if name not in ignore_list:
                 components.append(info)
                 if name == "gpu" and more_gpu:
-                    components.append(*more_gpu)
+                    for g in more_gpu:
+                        components.append(g)
                 if name == "disk" and more_disk:
-                    components.append(*more_disk)
+                    for g in more_disk:
+                        components.append(g)
 
         build_print = []
         spacing = 6 + self.spacing
