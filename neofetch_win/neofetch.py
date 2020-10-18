@@ -72,7 +72,12 @@ class Neofetch:
 
     def wmic(self, command: str):
         """ Fetch the wmic command to cmd """
-        p = Popen(command.split(" "), stdout=PIPE)
+        try:
+            p = Popen(command.split(" "), stdout=PIPE)
+        except FileNotFoundError:
+            print("WMIC.exe was not found... Make sure 'C:\Windows\System32\wbem' is added to PATH.")
+            sys.exit(0)
+
         stdout, stderror = p.communicate()
 
         output = stdout.decode("UTF-8", "ignore")
