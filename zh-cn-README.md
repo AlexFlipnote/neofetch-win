@@ -6,7 +6,6 @@
 ![PreviewImage](https://i.alexflipnote.dev/vfgQo1y.png)
 
 这是为了使[Neofetch](https://github.com/dylanaraps/neofetch)在Windows上的CMD上可用。如果您愿意捐款，请随时捐款。
-##### 译者提示：在Git Bash可能会出现错误，请尽量在Windows上的CMD或Powershell上使用。
 
 ## 警告！
 **您的IP地址一般情况下不应该出现在截图中，如果想隐藏IP地址，请使用`--ignore`参数！（详细见[issues#14](https://github.com/AlexFlipnote/neofetch-win/issues/14)）**
@@ -47,5 +46,6 @@ optional arguments:
   -a ART [ART ...], --art ART [ART ...]
                         更改ASCII艺术文件
   -na, --noart          关闭ASCII艺术文件
-  --ignore              不显示IP地址
+  --i IGNORE [IGNORE ...],--ignore IGNORE [IGNORE ...]
+                        不显示指定的参数(os, uptime, ip, motherboard, cpu, gpu, ram, disk)
 ```
