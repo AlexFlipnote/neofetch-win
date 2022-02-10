@@ -3,8 +3,10 @@ import getpass
 import psutil
 import shutil
 import socket
+import traceback
 import sys
 import time
+import re
 
 from . import art
 from subprocess import Popen, PIPE
@@ -70,12 +72,15 @@ class Neofetch:
         else:
             return colorama.Fore.RESET
 
-    def wmic(self, command: str):
+    def powershell(self, command: str):
         """ Fetch the wmic command to cmd """
         try:
-            p = Popen(command.split(" "), stdout=PIPE)
-        except FileNotFoundError:
-            print("WMIC.exe was not found... Make sure 'C:\Windows\System32\wbem' is added to PATH.")
+            p = Popen(["powershell"] + command.split(" "), stdout=PIPE)
+        except FileNotFoundError as err:
+            print("PowerShell command failed to run, make sure you're running the latest version of Windows possible.")
+            _traceback = ''.join(traceback.format_tb(err.__traceback__))
+            error = ('{1}{0}: {2}').format(type(err).__name__, _traceback, err)
+            print(error)
             sys.exit(0)
 
         stdout, stderror = p.communicate()
@@ -91,9 +96,9 @@ class Neofetch:
             try:
                 lines = open(self.art, "r").read().splitlines()
             except FileNotFoundError:
-                lines = art.default_art
+                lines = art.windows_11
         else:
-            lines = art.default_art
+            lines = art.windows_11
 
         longest = sorted(lines, key=len, reverse=True)
         self.spacing = len(longest[0])
@@ -126,8 +131,8 @@ class Neofetch:
     @property
     def os(self):
         """ Finds out what OS you're currently on """
-        lines = self.wmic("wmic os get Caption")
-        os_fullname = lines[-1].replace("Microsoft ", "")
+        lines = self.powershell("(Get-WMIObject win32_operatingsystem).name")
+        os_fullname = lines[-1].split("|")[0].replace("Microsoft ", "")
         return os_fullname
 
     @property
@@ -161,24 +166,23 @@ class Neofetch:
     @property
     def gpu(self):
         """ Get the current GPU you got """
-        lines = self.wmic("wmic path win32_VideoController get name")
-        return [f'     {gpu.strip()}' for gpu in lines[1:]]
+        return self.powershell("(Get-WMIObject win32_VideoController).name")
 
     @property
     def cpu(self):
         """ Get the current CPU you got """
-        lines = self.wmic("wmic cpu get name")
-        return lines[-1]
+        lines = self.powershell("Get-WmiObject -Class Win32_Processor | Select-Object -Property Name")
+        find_cpu = re.compile(r"\rName\r----\r(.*?)\r\r\r").search(lines[-1])
+        return find_cpu.group(1) if find_cpu else "Not found...??"
 
     @property
     def motherboard(self):
         """ Find the current motherboard you got """
-        mboard_name = self.wmic("wmic baseboard get Manufacturer")
-        mboard_module = self.wmic("wmic baseboard get product")
-
-        try:
-            return f"{mboard_name[-1]} ({mboard_module[-1]})"
-        except IndexError:
+        mboard = self.powershell("Get-WmiObject win32_baseboard | Format-List Product,Manufacturer")
+        find_mboard = re.compile(r"\r\rProduct: (.*?)\rManufacturer : (.*?)\r\r\r\r").search(mboard[-1])
+        if find_mboard:
+            return f"{find_mboard.group(2)} ({find_mboard.group(1)})"
+        else:
             return "Unknown..."
 
     @property

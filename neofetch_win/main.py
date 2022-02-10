@@ -22,7 +22,7 @@ def shell():
         sys.exit(1)
 
     if args.version:
-        print(neofetch_win.__version__)
+        print(f"neofetch_win v{neofetch_win.__version__}")
         sys.exit(0)
 
     if args.noart:
