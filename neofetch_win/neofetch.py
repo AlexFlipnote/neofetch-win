@@ -171,8 +171,8 @@ class Neofetch:
     @property
     def cpu(self):
         """ Get the current CPU you got """
-        lines = self.powershell("Get-WmiObject -Class Win32_Processor | Select-Object -Property Name")
-        find_cpu = re.compile(r"\rName\r----\r(.*?)\r\r\r").search(lines[-1])
+        lines = self.powershell("Get-WmiObject -Class Win32_Processor -ComputerName. | Select-Object -Property name")
+        find_cpu = re.compile(r"\rname\r[-]{1,}\r(.*?)\r").search(lines[-1])
         return find_cpu.group(1) if find_cpu else "Not found...??"
 
     @property
