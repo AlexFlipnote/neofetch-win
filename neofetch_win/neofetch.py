@@ -87,7 +87,7 @@ class Neofetch:
 
         output = stdout.decode("UTF-8", "ignore")
         lines = output.split("\r\r")
-        lines = [g.replace("\n", "").replace("  ", "") for g in lines if len(g) > 2]
+        lines = [g.replace("\n", "").replace("  ", "").replace("\\x00", "") for g in lines if len(g) > 2]
         return lines
 
     def get_art(self):
