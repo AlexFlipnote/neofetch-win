@@ -86,9 +86,8 @@ class Neofetch:
         stdout, stderror = p.communicate()
 
         output = stdout.decode("UTF-8", "ignore")
-        lines = output.split("\r\r")
-        lines = [g.replace("\n", "").replace("  ", "").replace("\\x00", "") for g in lines if len(g) > 2]
-        return lines
+        output = output.replace("\n", "").replace("  ", "").replace("\x00", "")  # Just to make sure...
+        return output
 
     def get_art(self):
         """ Get a .txt art file """
@@ -131,8 +130,8 @@ class Neofetch:
     @property
     def os(self):
         """ Finds out what OS you're currently on """
-        lines = self.powershell("(Get-WMIObject win32_operatingsystem).name")
-        os_fullname = lines[-1].split("|")[0].replace("Microsoft ", "")
+        ps = self.powershell("(Get-WMIObject win32_operatingsystem).name")
+        os_fullname = ps.split("|")[0].replace("Microsoft ", "")
         return os_fullname
 
     @property
@@ -166,20 +165,21 @@ class Neofetch:
     @property
     def gpu(self):
         """ Get the current GPU you got """
-        return self.powershell("(Get-WMIObject win32_VideoController).name")
+        ps = self.powershell("(Get-WMIObject win32_VideoController).name")
+        return ps.split("\n")
 
     @property
     def cpu(self):
         """ Get the current CPU you got """
-        lines = self.powershell("Get-WmiObject -Class Win32_Processor -ComputerName. | Select-Object -Property name")
-        find_cpu = re.compile(r"\rname\r[-]{1,}\r(.*?)\r").search(lines[-1])
+        ps = self.powershell("Get-WmiObject -Class Win32_Processor -ComputerName. | Select-Object -Property name")
+        find_cpu = re.compile(r"\rname\r[-]{1,}\r(.*?)\r").search(ps)
         return find_cpu.group(1) if find_cpu else "Not found...??"
 
     @property
     def motherboard(self):
         """ Find the current motherboard you got """
         mboard = self.powershell("Get-WmiObject win32_baseboard | Format-List Product,Manufacturer")
-        find_mboard = re.compile(r"\r\rProduct: (.*?)\rManufacturer : (.*?)\r\r\r\r").search(mboard[-1])
+        find_mboard = re.compile(r"\r\rProduct: (.*?)\rManufacturer : (.*?)\r\r\r\r").search(mboard)
         if find_mboard:
             return f"{find_mboard.group(2)} ({find_mboard.group(1)})"
         else:
