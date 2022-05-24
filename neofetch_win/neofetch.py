@@ -3,13 +3,11 @@ import getpass
 import psutil
 import shutil
 import socket
-import traceback
 import sys
 import time
-import re
+import wmi
 
 from . import art
-from subprocess import Popen, PIPE
 
 
 class Neofetch:
@@ -18,6 +16,7 @@ class Neofetch:
         self.art = art
         self.display_art = display_art
 
+        self.wmi = wmi.WMI()
         self.colour = self.colours(colour)
         self.art_colour = self.colours(art_colour)
 
@@ -72,23 +71,6 @@ class Neofetch:
         else:
             return colorama.Fore.RESET
 
-    def powershell(self, command: str):
-        """ Fetch the wmic command to cmd """
-        try:
-            p = Popen(["powershell"] + command.split(" "), stdout=PIPE)
-        except FileNotFoundError as err:
-            print("PowerShell command failed to run, make sure you're running the latest version of Windows possible.")
-            _traceback = ''.join(traceback.format_tb(err.__traceback__))
-            error = ('{1}{0}: {2}').format(type(err).__name__, _traceback, err)
-            print(error)
-            sys.exit(0)
-
-        stdout, stderror = p.communicate()
-
-        output = stdout.decode("UTF-8", "ignore")
-        output = output.replace("\n", "").replace("  ", "").replace("\x00", "")  # Just to make sure...
-        return output
-
     def get_art(self):
         """ Get a .txt art file """
         if self.art:
@@ -130,9 +112,11 @@ class Neofetch:
     @property
     def os(self):
         """ Finds out what OS you're currently on """
-        ps = self.powershell("(Get-WMIObject win32_operatingsystem).name")
-        os_fullname = ps.split("|")[0].replace("Microsoft ", "")
-        return os_fullname
+        try:
+            get_os = self.wmi.instances("win32_operatingsystem")[0].wmi_property("Name").value
+            return get_os.split("|")[0]
+        except Exception:
+            return "Unknown windows?"
 
     @property
     def uptime(self):
@@ -165,25 +149,29 @@ class Neofetch:
     @property
     def gpu(self):
         """ Get the current GPU you got """
-        ps = self.powershell("(Get-WMIObject win32_VideoController).name")
-        return ps.split("\n")
+        try:
+            return self.wmi.instances("win32_VideoController")[0].wmi_property("Name").value
+        except Exception:
+            return "Unknown GPU"
 
     @property
     def cpu(self):
         """ Get the current CPU you got """
-        ps = self.powershell("Get-WmiObject -Class Win32_Processor -ComputerName. | Select-Object -Property name")
-        find_cpu = re.compile(r"\rname\r[-]{1,}\r(.*?)\r").search(ps)
-        return find_cpu.group(1) if find_cpu else "Not found...??"
+        try:
+            return self.wmi.instances("Win32_Processor")[0].wmi_property("Name").value
+        except Exception:
+            return "Not found...??"
 
     @property
     def motherboard(self):
         """ Find the current motherboard you got """
-        mboard = self.powershell("Get-WmiObject win32_baseboard | Format-List Product,Manufacturer")
-        find_mboard = re.compile(r"\r\rProduct: (.*?)\rManufacturer : (.*?)\r\r\r\r").search(mboard)
-        if find_mboard:
-            return f"{find_mboard.group(2)} ({find_mboard.group(1)})"
-        else:
-            return "Unknown..."
+        try:
+            data = self.wmi.instances("win32_baseboard")[0]
+            product = data.wmi_property("Product").value
+            facture = data.wmi_property("Manufacturer").value
+            return f"{facture} {product}"
+        except Exception:
+            return "Not found...??"
 
     @property
     def ram(self):
@@ -222,7 +210,6 @@ class Neofetch:
 
         components = [headerline, underlines]
 
-        more_gpu = self.gpu[1:] if self.gpu[1:] else None
         more_disk = self.partitions[1:] if self.partitions[1:] else None
 
         components_list = [
@@ -231,7 +218,7 @@ class Neofetch:
             ("ip", f"{self.colourize('Local IP')}: {self.local_ip}"),
             ("motherboard", f"{self.colourize('Motherboard')}: {self.motherboard}"),
             ("cpu", f"{self.colourize('CPU')}: {self.cpu}"),
-            ("gpu", f"{self.colourize('GPU')}: {self.gpu[0].strip()}"),
+            ("gpu", f"{self.colourize('GPU')}: {self.gpu}"),
             ("ram", f"{self.colourize('Memory')}: {self.ram}"),
             ("disk", f"{self.colourize('Disk')}: {self.partitions[0].strip()}")
         ]
@@ -239,9 +226,6 @@ class Neofetch:
         for name, info in components_list:
             if name not in ignore_list:
                 components.append(info)
-                if name == "gpu" and more_gpu:
-                    for g in more_gpu:
-                        components.append(g)
                 if name == "disk" and more_disk:
                     for g in more_disk:
                         components.append(g)
