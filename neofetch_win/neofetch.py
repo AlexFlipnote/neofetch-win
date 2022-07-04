@@ -47,23 +47,8 @@ class Neofetch:
         """ Colour validator """
         clist = ["black", "red", "green", "yellow", "blue", "magenta", "cyan", "white"]
         if colour:
-            colour = colour.lower()
-            if colour == "black":
-                return colorama.Fore.BLACK
-            elif colour == "red":
-                return colorama.Fore.RED
-            elif colour == "green":
-                return colorama.Fore.GREEN
-            elif colour == "yellow":
-                return colorama.Fore.YELLOW
-            elif colour == "blue":
-                return colorama.Fore.BLUE
-            elif colour == "magenta":
-                return colorama.Fore.MAGENTA
-            elif colour == "cyan":
-                return colorama.Fore.CYAN
-            elif colour == "white":
-                return colorama.Fore.WHITE
+            if colour.lower() in clist:
+                return colorama.Fore.__getattribute__(colour.upper())
             else:
                 possible_colours = ", ".join(clist)
                 print(f"Possible colours: {possible_colours}")
@@ -148,9 +133,9 @@ class Neofetch:
 
     @property
     def gpu(self):
-        """ Get the current GPU you got """
+        """ Obtains the current GPUs in use """
         try:
-            return self.wmi.instances("win32_VideoController")[0].wmi_property("Name").value
+            return [x.wmi_property("Name").value for x in self.wmi.instances("Win32_VideoController")]
         except Exception:
             return "Unknown GPU"
 
@@ -218,7 +203,7 @@ class Neofetch:
             ("ip", f"{self.colourize('Local IP')}: {self.local_ip}"),
             ("motherboard", f"{self.colourize('Motherboard')}: {self.motherboard}"),
             ("cpu", f"{self.colourize('CPU')}: {self.cpu}"),
-            ("gpu", f"{self.colourize('GPU')}: {self.gpu}"),
+            *[("gpu", f"{self.colourize('GPU')}: {x}") for x in self.gpu],
             ("ram", f"{self.colourize('Memory')}: {self.ram}"),
             ("disk", f"{self.colourize('Disk')}: {self.partitions[0].strip()}")
         ]
