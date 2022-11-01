@@ -1,7 +1,7 @@
 # neofetch-win
 neofetch, but for Windows
 
-#### | ENGLISH | [简体中文](./zh-cn-README.md) |
+#### | ENGLISH | [简体中文](./zh-cn-README.md) |  [TÜRKÇE](./tr-README.md) |
 
 ![PreviewImage](https://i.alexflipnote.dev/vfgQo1y.png)
 
