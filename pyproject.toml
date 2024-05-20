@@ -1,0 +1,55 @@
+[build-system]
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.pdm.source]
+name = "public"
+url = "https://github.com/AlexFlipnote/neofetch-win"
+
+[project]
+name = "neofetch-win"
+description = "neofetch, but for Windows"
+requires-python = ">=3.11.0"
+license = {text = "MIT"}
+
+dynamic = ["version"]
+readme = "README.md"
+keywords = ["python", "windows", "ascii", "pip", "neofetch"]
+authors = [{name = "AlexFlipnote", email = "root@alexflipnote.dev"}]
+
+dependencies = [
+  "psutil",
+  "wmi",
+]
+
+[project.scripts]
+neofetch = "neofetch_win.__main__:main"
+
+[tool.setuptools]
+packages = ["neofetch_win"]
+
+[tool.setuptools.dynamic]
+version = {attr = "neofetch_win.__version__"}
+readme = {file = ["README.md"]}
+
+[tool.flake8]
+max-line-length = 128
+ignore = [
+  "D210", "D400", "D401", "D100", "D202", "D413", "D107",
+  "D101", "D103", "D102", "E121", "D205", "D209", "D105",
+  "E252", "W605", "W504", "E128", "E124", "E999", "W504"
+]
+
+[tool.pyright]
+reportOptionalOperand = "none"
+reportOptionalSubscript = "none"
+reportOptionalMemberAccess = "none"
+reportUnnecessaryTypeIgnoreComment = "warning"
+typeCheckingMode = "basic"
+pythonVersion = "3.11"
+
+include = ["neofetch_win"]
+exclude = [
+  "**/__pycache__", "**/*.pyc", "*.egg-info",
+  ".venv", "build", "dist",
+]

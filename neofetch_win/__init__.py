@@ -1,3 +1,4 @@
-__version__ = "1.3.4"
+__version__ = "1.4.0"
 
-from .neofetch import Neofetch  # noqa: F401
+# flake8: noqa: F401
+from .neofetch import Neofetch

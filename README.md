@@ -1,7 +1,5 @@
-# neofetch-win
+# neofetch_win
 neofetch, but for Windows
-
-#### | ENGLISH | [简体中文](./zh-cn-README.md) |  [TÜRKÇE](./tr-README.md) |
 
 ![PreviewImage](https://i.alexflipnote.dev/vfgQo1y.png)
 
@@ -9,7 +7,7 @@ This was made to have the command [neofetch](https://github.com/dylanaraps/neofe
 If you wish to contribute, feel free to do so.
 
 ## Requirement
-- Python 3.6 or up
+- Python 3.11 or up
 
 ## Install
 - Open CMD as admin
