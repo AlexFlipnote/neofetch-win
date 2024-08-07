@@ -104,7 +104,7 @@ class Neofetch:
 
         if self.art:
             try:
-                with open(self.art, "r") as f:
+                with open(self.art, "r", encoding="utf-8") as f:
                     lines = f.read().splitlines()
             except FileNotFoundError:
                 lines = art.windows_11
