@@ -283,6 +283,7 @@ class Neofetch:
                         line += components[index]
 
                     build_print.append(line)
+
             else:
                 for index, component in enumerate(components):
                     if index < len(art):
@@ -293,6 +294,7 @@ class Neofetch:
                     line += component
 
                     build_print.append(line)
+
         else:
             build_print = components
 
