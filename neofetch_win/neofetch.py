@@ -77,7 +77,8 @@ class Neofetch:
         template = f"{self.colour}{text}{Ansi.reset}"
         return template
 
-    def disk_space(self, partition: str) -> tuple:
+    def disk_space(self, partition: str) -> tuple[int, int, int]:
+        """ Get the disk space of a given partition """
         total, used, free = shutil.disk_usage(partition)
         return total, used, free
 
