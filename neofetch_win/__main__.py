@@ -91,7 +91,6 @@ def shell():
     print(
         nf.pretty_print(ignore_list=args.ignore)
     )
-    print('\n\n')
 
 
 def main():

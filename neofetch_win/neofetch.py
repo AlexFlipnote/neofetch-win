@@ -129,26 +129,24 @@ class Neofetch:
 
         return lines
 
-    @staticmethod
-    def color_blocks1() -> str:
-        """Return the first line of standard color blocks"""
+    @property
+    def colour_blocks(self) -> tuple[str, str]:
+        """ Return the colour blocks """
+        rows_1 = []
+        rows_2 = []
 
-        color_blocks = ""
         for i in range(30, 38):
-            color_blocks += f"\033[{i}\033[{i+10}m   "
-        color_blocks += "\033[m"
+            rows_1.append(f"\033[{i}\033[{i+10}m   ")
+        rows_1.append("\033[m")
 
-        return color_blocks
-
-    @staticmethod
-    def color_blocks2() -> str:
-        """Return the second line of standard color blocks"""
-
-        color_blocks = ""
         for i in range(8, 16):
-            color_blocks += f"\033[38;5;{i}m\033[48;5;{i}m   "
-        color_blocks += "\033[m"
-        return color_blocks
+            rows_2.append(f"\033[38;5;{i}m\033[48;5;{i}m   ")
+        rows_2.append("\033[m")
+
+        return (
+            "".join(rows_1),
+            "".join(rows_2)
+        )
 
 
     @property
@@ -288,6 +286,8 @@ class Neofetch:
 
         more_disk = self.partitions[1:] if self.partitions[1:] else None
 
+        colours_row_1, colours_row_2 = self.colour_blocks
+
         components_list: list[tuple[str, str]] = [
             ("os", f"{self.colourize('OS')}: {self.os}"),
             ("uptime", f"{self.colourize('Uptime')}: {self.uptime}"),
@@ -298,8 +298,8 @@ class Neofetch:
             ("ram", f"{self.colourize('Memory')}: {self.ram}"),
             ("disk", f"{self.colourize('Disk')}: {self.partitions[0].strip()}"),
             ("", ""),
-            ("color_block", self.color_blocks1()),
-            ("color_block", self.color_blocks2())
+            ("colours_row_1", colours_row_1),
+            ("colours_row_2", colours_row_2)
         ]
 
         for name, info in components_list:
