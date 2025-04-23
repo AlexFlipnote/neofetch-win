@@ -4,6 +4,7 @@ import shutil
 import socket
 import time
 
+from platform import release
 from typing import Optional
 from wmi import WMI, _wmi_class
 
@@ -22,6 +23,8 @@ class Ansi:
     white = "\x1b[38;21m"
     yellow = "\x1b[38;5;226m"
 
+    windows_10_blue = "\x1b[38;2;0;192;225m"
+    windows_11_blue = "\x1b[38;2;0;120;212m"
 
 class Neofetch:
     def __init__(
@@ -86,7 +89,8 @@ class Neofetch:
         """ Colour validator """
         clist = [
             "black", "red", "green", "yellow",
-            "blue", "magenta", "cyan", "white"
+            "blue", "magenta", "cyan", "white",
+            "windows_10_blue", "windows_11_blue"
         ]
 
         if colour:
@@ -101,19 +105,51 @@ class Neofetch:
 
     def get_art(self) -> list[str]:
         """ Get a .txt art file """
-        lines = art.windows_11
+        system_version = release()
+        try:
+            if system_version in ["10", "11"]:
+                ascii_art = getattr(art, f'windows_{system_version}')
+            else:
+                ascii_art = getattr(art, "windows_11")
+        except AttributeError:
+            ascii_art = getattr(art, "windows_11")
+
+
+        lines = ascii_art
 
         if self.art:
             try:
                 with open(self.art, "r", encoding="utf-8") as f:
                     lines = f.read().splitlines()
             except FileNotFoundError:
-                lines = art.windows_11
+                lines = ascii_art
 
         longest = sorted(lines, key=len, reverse=True)
         self.spacing = len(longest[0])
 
         return lines
+
+    @staticmethod
+    def color_blocks1() -> str:
+        """Return the first line of standard color blocks"""
+
+        color_blocks = ""
+        for i in range(30, 38):
+            color_blocks += f"\033[{i}\033[{i+10}m   "
+        color_blocks += "\033[m"
+
+        return color_blocks
+
+    @staticmethod
+    def color_blocks2() -> str:
+        """Return the second line of standard color blocks"""
+
+        color_blocks = ""
+        for i in range(8, 16):
+            color_blocks += f"\033[38;5;{i}m\033[48;5;{i}m   "
+        color_blocks += "\033[m"
+        return color_blocks
+
 
     @property
     def local_ip(self) -> str:
@@ -260,7 +296,10 @@ class Neofetch:
             ("cpu", f"{self.colourize('CPU')}: {self.cpu}"),
             *[("gpu", f"{self.colourize('GPU')}: {x}") for x in self.gpu],
             ("ram", f"{self.colourize('Memory')}: {self.ram}"),
-            ("disk", f"{self.colourize('Disk')}: {self.partitions[0].strip()}")
+            ("disk", f"{self.colourize('Disk')}: {self.partitions[0].strip()}"),
+            ("", ""),
+            ("color_block", self.color_blocks1()),
+            ("color_block", self.color_blocks2())
         ]
 
         for name, info in components_list:

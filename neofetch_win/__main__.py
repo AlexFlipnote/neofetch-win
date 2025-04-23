@@ -1,5 +1,6 @@
 import sys
 
+from platform import release
 from argparse import ArgumentParser
 
 from . import __version__, Neofetch
@@ -57,8 +58,16 @@ def shell():
     # Default values
     display_art = True
     art = None
-    colour = "cyan"
-    artcolour = "cyan"
+
+    # Check system version and set default colours
+    system_version = release()
+
+    if system_version in ["10", "11"]:
+        colour = f"windows_{system_version}_blue"
+        artcolour = f"windows_{system_version}_blue"
+    else:
+        colour = "cyan"
+        artcolour = "cyan"
 
     if args.noart:
         display_art = False
@@ -82,6 +91,7 @@ def shell():
     print(
         nf.pretty_print(ignore_list=args.ignore)
     )
+    print('\n\n')
 
 
 def main():
