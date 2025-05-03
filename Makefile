@@ -13,6 +13,9 @@ uninstall:  ## Uninstall the package
 reinstall: uninstall install  ## Reinstall the package
 
 # Development tools
+install_dev:	 ## Install the package in development mode
+	pip install .[dev]
+
 venv:  ## Create a virtual environment
 	python -m venv .venv
 

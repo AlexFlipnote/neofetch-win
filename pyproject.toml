@@ -22,6 +22,13 @@ dependencies = [
   "wmi",
 ]
 
+[project.urls]
+Homepage = "https://github.com/AlexFlipnote/neofetch-win"
+Repository = "https://github.com/AlexFlipnote/neofetch-win"
+
+[project.optional-dependencies]
+dev = ["pyright", "ruff", "toml"]
+
 [project.scripts]
 neofetch = "neofetch_win.__main__:main"
 
