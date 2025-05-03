@@ -6,7 +6,8 @@ from argparse import ArgumentParser
 from . import __version__, Neofetch
 
 
-def shell():
+def shell() -> None:
+    """ The shell function that parses the arguments and prints the output. """
     parser = ArgumentParser(description="neofetch, but for Windows")
 
     parser.add_argument(
@@ -44,7 +45,7 @@ def shell():
 
     parser.add_argument(
         "-i", "--ignore",
-        help="Ignore components (os, uptime, ip, motherboard, cpu, gpu, ram, disk)",
+        help="Ignore components (title, underline, os, uptime, ip, motherboard, cpu, gpu, ram, disk, linebreak, colours_1, colours_2)",
         nargs="+",
         default=[]
     )
@@ -93,7 +94,8 @@ def shell():
     )
 
 
-def main():
+def main() -> None:
+    """ Main function that prins everything for the user. """
     try:
         shell()
     except KeyboardInterrupt:

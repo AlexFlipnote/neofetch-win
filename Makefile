@@ -16,6 +16,12 @@ reinstall: uninstall install  ## Reinstall the package
 venv:  ## Create a virtual environment
 	python -m venv .venv
 
+type:  ## Run pyright type checker
+	@pyright --pythonversion 3.11
+
+lint:  ## Run ruff linter
+	@ruff check --config pyproject.toml
+
 clean:
 	rm -rf ./build
 	rm -rf ./dist
