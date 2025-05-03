@@ -6,6 +6,7 @@ import time
 
 from platform import release
 from typing import Optional
+from unicodedata import east_asian_width
 from wmi import WMI, _wmi_class
 
 from . import art
@@ -102,6 +103,16 @@ class Neofetch:
             return getattr(Ansi, colour.lower(), Ansi.reset)
 
         return Ansi.reset
+
+    def get_str_width(self, text: str) -> int:
+        """ Calculate the display width of a string """
+        length = 0
+        for c in text:
+            if east_asian_width(c) in 'FWA':
+                length += 2
+            else:
+                length += 1
+        return length
 
     def get_art(self) -> list[str]:
         """ Get a .txt art file """
@@ -280,15 +291,17 @@ class Neofetch:
 
         headerline = f"{self.colourize(self.username)}@{self.colourize(self.hostname)}"
         headerline_nocolour = f"{self.username}@{self.hostname}"
-        underlines = "".join(["-" for g in range(0, len(headerline_nocolour))])
+        underlines = "".join(["-" for g in range(0, self.get_str_width(headerline_nocolour))])
 
-        components = [headerline, underlines]
+        components = []
 
         more_disk = self.partitions[1:] if self.partitions[1:] else None
 
         colours_row_1, colours_row_2 = self.colour_blocks
 
         components_list: list[tuple[str, str]] = [
+            ("title", headerline),
+            ("underline", underlines),
             ("os", f"{self.colourize('OS')}: {self.os}"),
             ("uptime", f"{self.colourize('Uptime')}: {self.uptime}"),
             ("ip", f"{self.colourize('Local IP')}: {self.local_ip}"),
@@ -297,7 +310,7 @@ class Neofetch:
             *[("gpu", f"{self.colourize('GPU')}: {x}") for x in self.gpu],
             ("ram", f"{self.colourize('Memory')}: {self.ram}"),
             ("disk", f"{self.colourize('Disk')}: {self.partitions[0].strip()}"),
-            ("", ""),
+            ("linebreak", ""),
             ("colours_row_1", colours_row_1),
             ("colours_row_2", colours_row_2)
         ]
