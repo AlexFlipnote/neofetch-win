@@ -24,6 +24,18 @@ def shell() -> None:
     )
 
     parser.add_argument(
+        "-l", "--logo",
+        help="Hide the info text and only show the ascii logo",
+        action="store_true"
+    )
+
+    parser.add_argument(
+        "--stdout",
+        help="Turn off all colors",
+        action="store_true"
+    )
+
+    parser.add_argument(
         "-ac", "--artcolour", "--artcolor",
         help="Change colour of the ascii",
         nargs="+",
@@ -57,6 +69,8 @@ def shell() -> None:
         sys.exit(0)
 
     # Default values
+    only_ascii = False
+    stdout = False
     display_art = True
     art = None
 
@@ -69,6 +83,12 @@ def shell() -> None:
     else:
         colour = "cyan"
         artcolour = "cyan"
+
+    if args.logo:
+        only_ascii = True
+
+    if args.stdout:
+        stdout = True
 
     if args.noart:
         display_art = False
@@ -87,6 +107,8 @@ def shell() -> None:
         art_colour=artcolour,
         art=art,
         display_art=display_art,
+        only_ascii=only_ascii,
+        stdout=stdout
     )
 
     print(
