@@ -372,7 +372,7 @@ class Neofetch:
                     line = f"{art_line:<{spacing}}"
 
                     if not self.stdout:
-                        line = f"{self.art_colour}{line}{Ansi.reset}"
+                        line = f"{Ansi.reset}{line}{Ansi.reset}"
 
                     if index < len(components):
                         line += components[index]
@@ -381,16 +381,10 @@ class Neofetch:
 
             else:
                 for index, component in enumerate(components):
-                    line = f"{'':<{spacing}}"
+                    line = f"{art[index]:<{spacing}}" if index < len(art) else f"{'':<{spacing}}"
 
                     if not self.stdout:
-                        line = f"{self.art_colour}{line}{Ansi.reset}"
-
-                    line = (
-                        f"{self.art_colour}{line}{Ansi.reset}"
-                        if index < len(art) else
-                        f"{'':<{spacing}}"
-                    )
+                        line = f"{Ansi.reset}{line}{Ansi.reset}"
 
                     line += component
 
