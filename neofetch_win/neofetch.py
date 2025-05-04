@@ -33,13 +33,18 @@ class Neofetch:
         art: str | None = None,
         display_art: bool = True,
         colour: str = "cyan",
-        art_colour: str | None = None
+        art_colour: str | None = None,
+        only_ascii: bool = False,
+        stdout: bool = False,
     ):
         self.wmi: _wmi_class = WMI()
 
         self.spacing: int = 0
         self.art = art
         self.display_art = display_art
+        self.only_ascii = only_ascii
+
+        self.stdout = stdout
 
         self.colour = self.colours(colour)
         self.art_colour = self.colours(art_colour)
@@ -78,6 +83,10 @@ class Neofetch:
         -------
             The colourized text
         """
+
+        if self.stdout:
+            return text
+
         return f"{self.colour}{text}{Ansi.reset}"
 
     def disk_space(self, partition: str) -> tuple[int, int, int]:
@@ -164,6 +173,10 @@ class Neofetch:
     @property
     def colour_blocks(self) -> tuple[str, str]:
         """ Return the colour blocks. """
+
+        if self.stdout:
+            return "", ""
+
         rows_1 = []
         rows_2 = []
 
@@ -338,7 +351,7 @@ class Neofetch:
         ]
 
         for name, info in components_list:
-            if name in ignore_list:
+            if(name in ignore_list) or self.only_ascii:
                 continue
 
             components.append(info)
@@ -356,7 +369,10 @@ class Neofetch:
         if self.display_art:
             if len(art) > len(components):  # Prefer the bigger array to iterate over
                 for index, art_line in enumerate(art):
-                    line = f"{self.art_colour}{art_line:<{spacing}}{Ansi.reset}"
+                    line = f"{art_line:<{spacing}}"
+
+                    if not self.stdout:
+                        line = f"{self.art_colour}{line}{Ansi.reset}"
 
                     if index < len(components):
                         line += components[index]
@@ -365,8 +381,13 @@ class Neofetch:
 
             else:
                 for index, component in enumerate(components):
+                    line = f"{'':<{spacing}}"
+
+                    if not self.stdout:
+                        line = f"{self.art_colour}{line}{Ansi.reset}"
+
                     line = (
-                        f"{self.art_colour}{art[index]:<{spacing}}{Ansi.reset}"
+                        f"{self.art_colour}{line}{Ansi.reset}"
                         if index < len(art) else
                         f"{'':<{spacing}}"
                     )
