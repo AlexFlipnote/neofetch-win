@@ -83,7 +83,6 @@ class Neofetch:
         -------
             The colourized text
         """
-
         if self.stdout:
             return text
 
@@ -173,7 +172,6 @@ class Neofetch:
     @property
     def colour_blocks(self) -> tuple[str, str]:
         """ Return the colour blocks. """
-
         if self.stdout:
             return "", ""
 
@@ -351,7 +349,7 @@ class Neofetch:
         ]
 
         for name, info in components_list:
-            if(name in ignore_list) or self.only_ascii:
+            if (name in ignore_list) or self.only_ascii:
                 continue
 
             components.append(info)
